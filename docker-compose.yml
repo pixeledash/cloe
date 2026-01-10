@@ -1,0 +1,47 @@
+version: "3.9"
+
+services:
+  db:
+    image: postgres:15
+    container_name: postgres_db
+    environment:
+      POSTGRES_DB: smart_classroom
+      POSTGRES_USER: classroom_user
+      POSTGRES_PASSWORD: securepass
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U classroom_user -d smart_classroom"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  backend:
+    build: ./backend
+    container_name: django_backend
+    environment:
+      - DJANGO_SETTINGS_MODULE=classroom_api.settings
+      - DATABASE_HOST=db
+      - DATABASE_NAME=smart_classroom
+      - DATABASE_USER=classroom_user
+      - DATABASE_PASSWORD=securepass
+    depends_on:
+      db:
+        condition: service_healthy
+    ports:
+      - "8000:8000"
+    command: sh -c "python manage.py migrate && python manage.py runserver 0.0.0.0:8000"
+
+  frontend:
+    build: ./frontend
+    container_name: react_frontend
+    ports:
+      - "5173:5173"
+    depends_on:
+      - backend
+
+volumes:
+  db_data:
+

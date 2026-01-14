@@ -17,7 +17,7 @@ class AttendanceListSerializer(serializers.ModelSerializer):
     """
     student_id = serializers.CharField(source='student.student_id', read_only=True)
     student_name = serializers.SerializerMethodField()
-    student_email = serializers.EmailField(source='student.user.email', read_only=True)
+    student_email = serializers.EmailField(source='student.email', read_only=True)
     marked_by_name = serializers.SerializerMethodField()
     
     class Meta:
@@ -29,7 +29,7 @@ class AttendanceListSerializer(serializers.ModelSerializer):
     
     def get_student_name(self, obj):
         """Get student's full name"""
-        return obj.student.user.get_full_name()
+        return obj.student.get_full_name()
     
     def get_marked_by_name(self, obj):
         """Get name of user who marked attendance"""

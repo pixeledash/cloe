@@ -24,6 +24,7 @@ INSTALLED_APPS = [
     'apps.classes.apps.ClassesConfig',
     'apps.sessions.apps.SessionsConfig',
     'apps.attendance.apps.AttendanceConfig',
+    'apps.analytics.apps.AnalyticsConfig',
 ]
 
 MIDDLEWARE = [

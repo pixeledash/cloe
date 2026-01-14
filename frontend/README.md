@@ -1,13 +1,69 @@
-# React + Vite
+# Cloe Classroom - Frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A modern, responsive React-based frontend for the Cloe Classroom Management System.
 
-Currently, two official plugins are available:
+## 🚀 Quick Start
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+### Using Docker (Recommended)
+```bash
+# From project root
+cd ..
+docker-compose up -d
+```
 
-## React Compiler
+### Local Development
+```bash
+npm install
+npm run dev
+```
+
+Access at: http://localhost:5173
+
+## 🔐 Test Credentials
+
+```
+Email: teacher@test.com
+Password: password123
+```
+
+## ✨ Features
+
+### Module 1: Authentication ✅ COMPLETE
+- JWT-based authentication
+- Auto token refresh
+- Protected routes
+- Role-based access control
+- MFA support
+- Responsive design
+
+### Coming Soon
+- Module 2: Academic Data (Classes, Students, Subjects)
+- Module 3: Session Management
+- Module 4: Live Attendance
+- Module 5: Analytics
+- Module 6: Reports
+- Module 7: Notifications
+
+## 🛠️ Tech Stack
+
+- React 19.2 - UI library
+- React Router 6 - Routing
+- Axios - HTTP client
+- Vite 7 - Build tool
+
+## 📚 Documentation
+
+See project root for:
+- `MODULE1_FRONTEND_COMPLETE.md`
+- `MODULE1_TESTING_GUIDE.md`
+- `MODULE1_DEVELOPER_GUIDE.md`
+- `QUICK_START.md`
+
+## 🔧 Environment Variables
+
+Create `.env`:
+```env
+VITE_API_URL=http://localhost:8000/api
 
 The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
 

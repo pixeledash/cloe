@@ -8,7 +8,9 @@ from .views import (
     MFASetupView,
     MFAVerifyView,
     MFADisableView,
-    RoleViewSet
+    RoleViewSet,
+    UserListView,
+    UpdateUserRolesView,
 )
 
 router = DefaultRouter()
@@ -22,5 +24,7 @@ urlpatterns = [
     path('mfa/setup/', MFASetupView.as_view(), name='mfa-setup'),
     path('mfa/verify/', MFAVerifyView.as_view(), name='mfa-verify'),
     path('mfa/disable/', MFADisableView.as_view(), name='mfa-disable'),
+    path('list/', UserListView.as_view(), name='user-list'),
+    path('<uuid:user_id>/update-roles/', UpdateUserRolesView.as_view(), name='update-user-roles'),
     path('', include(router.urls)),
 ]

@@ -30,6 +30,11 @@ class RegisterSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         validated_data.pop('password_confirm')
         user = User.objects.create_user(**validated_data)
+        
+        # Auto-assign TEACHER role to new users
+        teacher_role, created = Role.objects.get_or_create(name='TEACHER')
+        user.roles.add(teacher_role)
+        
         return user
 
 

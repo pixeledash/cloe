@@ -32,6 +32,7 @@ class RegisterView(APIView):
                     'email': user.email,
                     'first_name': user.first_name,
                     'last_name': user.last_name,
+                    'roles': [role.name for role in user.roles.all()],
                 },
                 'tokens': {
                     'refresh': str(refresh),
@@ -85,6 +86,7 @@ class LoginView(APIView):
                 'first_name': user.first_name,
                 'last_name': user.last_name,
                 'mfa_enabled': user.mfa_enabled,
+                'roles': [role.name for role in user.roles.all()],
             },
             'tokens': {
                 'refresh': str(refresh),
@@ -171,3 +173,60 @@ class RoleViewSet(ModelViewSet):
     serializer_class = RoleSerializer
     permission_classes = [permissions.IsAuthenticated]
     http_method_names = ['get', 'post']
+
+
+class UserListView(APIView):
+    """List all users - Admin only"""
+    permission_classes = [permissions.IsAuthenticated]
+    
+    def get(self, request):
+        # Check if user is admin
+        if not request.user.has_role('ADMIN'):
+            return Response(
+                {'detail': 'Admin access required'},
+                status=status.HTTP_403_FORBIDDEN
+            )
+        
+        users = User.objects.all()
+        serializer = UserSerializer(users, many=True)
+        return Response(serializer.data)
+
+
+class UpdateUserRolesView(APIView):
+    """Update user roles - Admin only"""
+    permission_classes = [permissions.IsAuthenticated]
+    
+    def patch(self, request, user_id):
+        # Check if user is admin
+        if not request.user.has_role('ADMIN'):
+            return Response(
+                {'detail': 'Admin access required'},
+                status=status.HTTP_403_FORBIDDEN
+            )
+        
+        try:
+            user = User.objects.get(id=user_id)
+        except User.DoesNotExist:
+            return Response(
+                {'detail': 'User not found'},
+                status=status.HTTP_404_NOT_FOUND
+            )
+        
+        role_names = request.data.get('roles', [])
+        
+        # Clear existing roles
+        user.roles.clear()
+        
+        # Add new roles
+        for role_name in role_names:
+            try:
+                role = Role.objects.get(name=role_name)
+                user.roles.add(role)
+            except Role.DoesNotExist:
+                return Response(
+                    {'detail': f'Role {role_name} not found'},
+                    status=status.HTTP_400_BAD_REQUEST
+                )
+        
+        serializer = UserSerializer(user)
+        return Response(serializer.data)

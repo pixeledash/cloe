@@ -180,7 +180,10 @@ class AttendanceViewSet(viewsets.ModelViewSet):
         - 404: Session not found
         - 403: Not authorized
         """
-        session = get_object_or_404(ClassSession, id=session_id)
+        session = get_object_or_404(
+            ClassSession.objects.select_related('class_ref', 'teacher', 'teacher__user', 'subject'),
+            id=session_id
+        )
         
         # Check authorization
         if not request.user.has_role('ADMIN'):
@@ -217,8 +220,20 @@ class AttendanceViewSet(viewsets.ModelViewSet):
         # Get statistics
         stats = Attendance.get_session_statistics(session)
         
-        # Serialize data
-        records_serializer = AttendanceListSerializer(records, many=True)
+        # Serialize data manually to avoid select_related issues
+        records_data = []
+        for record in records:
+            records_data.append({
+                'id': str(record.id),
+                'student_id': record.student.student_id,
+                'student_name': record.student.get_full_name(),
+                'student_email': record.student.email,
+                'status': record.status,
+                'marked_at': record.marked_at,
+                'marked_by_name': record.marked_by.get_full_name() if record.marked_by else None,
+                'notes': record.notes
+            })
+        
         stats_serializer = SessionAttendanceStatsSerializer(stats)
         
         from apps.sessions.serializers import ClassSessionListSerializer
@@ -227,7 +242,7 @@ class AttendanceViewSet(viewsets.ModelViewSet):
         return Response({
             'session': session_serializer.data,
             'statistics': stats_serializer.data,
-            'records': records_serializer.data
+            'records': records_data
         }, status=status.HTTP_200_OK)
     
     @action(detail=False, methods=['get'], url_path='student/(?P<student_id>[^/.]+)')
@@ -318,8 +333,19 @@ class AttendanceViewSet(viewsets.ModelViewSet):
             date_to=date_to
         )
         
-        # Serialize data
-        records_serializer = AttendanceListSerializer(records, many=True)
+        # Serialize data manually to avoid select_related issues
+        records_data = []
+        for record in records:
+            records_data.append({
+                'id': str(record.id),
+                'session_id': str(record.session.id),
+                'class_name': record.session.class_ref.name,
+                'subject_name': record.session.subject.name,
+                'status': record.status,
+                'marked_at': record.marked_at,
+                'notes': record.notes
+            })
+        
         stats_serializer = StudentAttendanceStatsSerializer(stats)
         
         from apps.classes.serializers import StudentSerializer
@@ -328,7 +354,7 @@ class AttendanceViewSet(viewsets.ModelViewSet):
         return Response({
             'student': student_serializer.data,
             'statistics': stats_serializer.data,
-            'records': records_serializer.data
+            'records': records_data
         }, status=status.HTTP_200_OK)
     
     def update(self, request, *args, **kwargs):

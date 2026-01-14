@@ -1,0 +1,763 @@
+{
+	"info": {
+		"_postman_id": "cloe-classroom-api",
+		"name": "Classroom API",
+		"description": "API collection for Smart Classroom Management System",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "{{access_token}}",
+				"type": "string"
+			}
+		]
+	},
+	"variable": [
+		{
+			"key": "base_url",
+			"value": "http://localhost:8000",
+			"type": "string"
+		},
+		{
+			"key": "access_token",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "refresh_token",
+			"value": "",
+			"type": "string"
+		}
+	],
+	"item": [
+		{
+			"name": "Authentication",
+			"item": [
+				{
+					"name": "Register User",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"email\": \"teacher@school.com\",\n  \"password\": \"SecurePass123!\",\n  \"first_name\": \"John\",\n  \"last_name\": \"Doe\",\n  \"role\": \"teacher\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/users/register/",
+							"host": ["{{base_url}}"],
+							"path": ["api", "users", "register", ""]
+						},
+						"description": "Register a new user (teacher, student, or admin)"
+					}
+				},
+				{
+					"name": "Login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.code === 200) {",
+									"    var jsonData = pm.response.json();",
+									"    pm.collectionVariables.set(\"access_token\", jsonData.access);",
+									"    pm.collectionVariables.set(\"refresh_token\", jsonData.refresh);",
+									"    console.log(\"Access token saved:\", jsonData.access);",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"email\": \"teacher@school.com\",\n  \"password\": \"SecurePass123!\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/users/login/",
+							"host": ["{{base_url}}"],
+							"path": ["api", "users", "login", ""]
+						},
+						"description": "Login and get JWT access/refresh tokens"
+					}
+				},
+				{
+					"name": "Refresh Token",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.code === 200) {",
+									"    var jsonData = pm.response.json();",
+									"    pm.collectionVariables.set(\"access_token\", jsonData.access);",
+									"    console.log(\"New access token saved:\", jsonData.access);",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"refresh\": \"{{refresh_token}}\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/users/token/refresh/",
+							"host": ["{{base_url}}"],
+							"path": ["api", "users", "token", "refresh", ""]
+						},
+						"description": "Refresh access token using refresh token"
+					}
+				},
+				{
+					"name": "Get Current User",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/users/me/",
+							"host": ["{{base_url}}"],
+							"path": ["api", "users", "me", ""]
+						},
+						"description": "Get currently authenticated user details"
+					}
+				}
+			]
+		},
+		{
+			"name": "Users & Roles",
+			"item": [
+				{
+					"name": "List Roles",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/users/roles/",
+							"host": ["{{base_url}}"],
+							"path": ["api", "users", "roles", ""]
+						}
+					}
+				},
+				{
+					"name": "Get Role Details",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/users/roles/:id/",
+							"host": ["{{base_url}}"],
+							"path": ["api", "users", "roles", ":id", ""],
+							"variable": [
+								{
+									"key": "id",
+									"value": "1"
+								}
+							]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "Classes",
+			"item": [
+				{
+					"name": "List Subjects",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/classes/subjects/",
+							"host": ["{{base_url}}"],
+							"path": ["api", "classes", "subjects", ""]
+						}
+					}
+				},
+				{
+					"name": "Create Subject",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Mathematics\",\n  \"code\": \"MATH101\",\n  \"description\": \"Introduction to Algebra and Calculus\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/classes/subjects/",
+							"host": ["{{base_url}}"],
+							"path": ["api", "classes", "subjects", ""]
+						}
+					}
+				},
+				{
+					"name": "List Teachers",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/classes/teachers/",
+							"host": ["{{base_url}}"],
+							"path": ["api", "classes", "teachers", ""]
+						}
+					}
+				},
+				{
+					"name": "List Classes",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/classes/classes/",
+							"host": ["{{base_url}}"],
+							"path": ["api", "classes", "classes", ""]
+						}
+					}
+				},
+				{
+					"name": "Create Class",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Math 101 - Section A\",\n  \"subject\": \"<subject-uuid>\",\n  \"teacher\": \"<teacher-uuid>\",\n  \"room_number\": \"A-201\",\n  \"schedule\": \"Mon/Wed/Fri 10:00-11:30\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/classes/classes/",
+							"host": ["{{base_url}}"],
+							"path": ["api", "classes", "classes", ""]
+						}
+					}
+				},
+				{
+					"name": "Get Class Details",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/classes/classes/:id/",
+							"host": ["{{base_url}}"],
+							"path": ["api", "classes", "classes", ":id", ""],
+							"variable": [
+								{
+									"key": "id",
+									"value": "<class-uuid>"
+								}
+							]
+						}
+					}
+				},
+				{
+					"name": "Update Class",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"room_number\": \"B-305\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/classes/classes/:id/",
+							"host": ["{{base_url}}"],
+							"path": ["api", "classes", "classes", ":id", ""],
+							"variable": [
+								{
+									"key": "id",
+									"value": "<class-uuid>"
+								}
+							]
+						}
+					}
+				},
+				{
+					"name": "Delete Class",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/classes/classes/:id/",
+							"host": ["{{base_url}}"],
+							"path": ["api", "classes", "classes", ":id", ""],
+							"variable": [
+								{
+									"key": "id",
+									"value": "<class-uuid>"
+								}
+							]
+						}
+					}
+				},
+				{
+					"name": "List Students",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/classes/students/",
+							"host": ["{{base_url}}"],
+							"path": ["api", "classes", "students", ""]
+						}
+					}
+				},
+				{
+					"name": "List Enrollments",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/classes/enrollments/",
+							"host": ["{{base_url}}"],
+							"path": ["api", "classes", "enrollments", ""]
+						}
+					}
+				},
+				{
+					"name": "Enroll Student",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"class_id\": \"<class-uuid>\",\n  \"student\": \"<student-uuid>\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/classes/enrollments/",
+							"host": ["{{base_url}}"],
+							"path": ["api", "classes", "enrollments", ""]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "Sessions",
+			"item": [
+				{
+					"name": "List Sessions",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/sessions/sessions/",
+							"host": ["{{base_url}}"],
+							"path": ["api", "sessions", "sessions", ""]
+						}
+					}
+				},
+				{
+					"name": "Create Session",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"class_id\": \"<class-uuid>\",\n  \"title\": \"Introduction to Linear Equations\",\n  \"description\": \"Basic concepts of linear algebra\",\n  \"scheduled_start\": \"2026-01-15T10:00:00Z\",\n  \"scheduled_end\": \"2026-01-15T11:30:00Z\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/sessions/sessions/",
+							"host": ["{{base_url}}"],
+							"path": ["api", "sessions", "sessions", ""]
+						}
+					}
+				},
+				{
+					"name": "Get Session Details",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/sessions/sessions/:id/",
+							"host": ["{{base_url}}"],
+							"path": ["api", "sessions", "sessions", ":id", ""],
+							"variable": [
+								{
+									"key": "id",
+									"value": "<session-uuid>"
+								}
+							]
+						}
+					}
+				},
+				{
+					"name": "Start Session",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/sessions/sessions/:id/start/",
+							"host": ["{{base_url}}"],
+							"path": ["api", "sessions", "sessions", ":id", "start", ""],
+							"variable": [
+								{
+									"key": "id",
+									"value": "<session-uuid>"
+								}
+							]
+						},
+						"description": "Start a session (if custom action exists)"
+					}
+				},
+				{
+					"name": "End Session",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/sessions/sessions/:id/end/",
+							"host": ["{{base_url}}"],
+							"path": ["api", "sessions", "sessions", ":id", "end", ""],
+							"variable": [
+								{
+									"key": "id",
+									"value": "<session-uuid>"
+								}
+							]
+						},
+						"description": "End a session (if custom action exists)"
+					}
+				},
+				{
+					"name": "Update Session",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"title\": \"Advanced Linear Equations\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/sessions/sessions/:id/",
+							"host": ["{{base_url}}"],
+							"path": ["api", "sessions", "sessions", ":id", ""],
+							"variable": [
+								{
+									"key": "id",
+									"value": "<session-uuid>"
+								}
+							]
+						}
+					}
+				},
+				{
+					"name": "Delete Session",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/sessions/sessions/:id/",
+							"host": ["{{base_url}}"],
+							"path": ["api", "sessions", "sessions", ":id", ""],
+							"variable": [
+								{
+									"key": "id",
+									"value": "<session-uuid>"
+								}
+							]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "Attendance",
+			"item": [
+				{
+					"name": "List Attendance Records",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/attendance/attendance/",
+							"host": ["{{base_url}}"],
+							"path": ["api", "attendance", "attendance", ""]
+						}
+					}
+				},
+				{
+					"name": "Create Attendance Record",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"session\": \"<session-uuid>\",\n  \"student\": \"<student-uuid>\",\n  \"status\": \"present\",\n  \"check_in_time\": \"2026-01-15T10:05:00Z\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/attendance/attendance/",
+							"host": ["{{base_url}}"],
+							"path": ["api", "attendance", "attendance", ""]
+						}
+					}
+				},
+				{
+					"name": "Get Attendance Record",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/attendance/attendance/:id/",
+							"host": ["{{base_url}}"],
+							"path": ["api", "attendance", "attendance", ":id", ""],
+							"variable": [
+								{
+									"key": "id",
+									"value": "<attendance-uuid>"
+								}
+							]
+						}
+					}
+				},
+				{
+					"name": "Update Attendance",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"status\": \"late\",\n  \"notes\": \"Arrived 10 minutes late\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/attendance/attendance/:id/",
+							"host": ["{{base_url}}"],
+							"path": ["api", "attendance", "attendance", ":id", ""],
+							"variable": [
+								{
+									"key": "id",
+									"value": "<attendance-uuid>"
+								}
+							]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "Analytics",
+			"item": [
+				{
+					"name": "Student Analytics",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/analytics/student/:student_id/?start_date=2026-01-01&end_date=2026-01-31",
+							"host": ["{{base_url}}"],
+							"path": ["api", "analytics", "student", ":student_id", ""],
+							"query": [
+								{
+									"key": "start_date",
+									"value": "2026-01-01"
+								},
+								{
+									"key": "end_date",
+									"value": "2026-01-31"
+								}
+							],
+							"variable": [
+								{
+									"key": "student_id",
+									"value": "<student-uuid>"
+								}
+							]
+						},
+						"description": "Get detailed analytics for a student"
+					}
+				},
+				{
+					"name": "Student Quick Stats",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/analytics/student/:student_id/quick/",
+							"host": ["{{base_url}}"],
+							"path": ["api", "analytics", "student", ":student_id", "quick", ""],
+							"variable": [
+								{
+									"key": "student_id",
+									"value": "<student-uuid>"
+								}
+							]
+						},
+						"description": "Get quick stats for a student"
+					}
+				},
+				{
+					"name": "Class Analytics",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/analytics/class/:class_id/?start_date=2026-01-01&end_date=2026-01-31",
+							"host": ["{{base_url}}"],
+							"path": ["api", "analytics", "class", ":class_id", ""],
+							"query": [
+								{
+									"key": "start_date",
+									"value": "2026-01-01"
+								},
+								{
+									"key": "end_date",
+									"value": "2026-01-31"
+								}
+							],
+							"variable": [
+								{
+									"key": "class_id",
+									"value": "<class-uuid>"
+								}
+							]
+						},
+						"description": "Get detailed analytics for a class"
+					}
+				},
+				{
+					"name": "Class Quick Stats",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/analytics/class/:class_id/quick/",
+							"host": ["{{base_url}}"],
+							"path": ["api", "analytics", "class", ":class_id", "quick", ""],
+							"variable": [
+								{
+									"key": "class_id",
+									"value": "<class-uuid>"
+								}
+							]
+						},
+						"description": "Get quick stats for a class"
+					}
+				}
+			]
+		},
+		{
+			"name": "MFA (Multi-Factor Auth)",
+			"item": [
+				{
+					"name": "Setup MFA",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/users/mfa/setup/",
+							"host": ["{{base_url}}"],
+							"path": ["api", "users", "mfa", "setup", ""]
+						},
+						"description": "Setup MFA for current user"
+					}
+				},
+				{
+					"name": "Verify MFA",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"code\": \"123456\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/users/mfa/verify/",
+							"host": ["{{base_url}}"],
+							"path": ["api", "users", "mfa", "verify", ""]
+						},
+						"description": "Verify MFA code"
+					}
+				},
+				{
+					"name": "Disable MFA",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/users/mfa/disable/",
+							"host": ["{{base_url}}"],
+							"path": ["api", "users", "mfa", "disable", ""]
+						},
+						"description": "Disable MFA for current user"
+					}
+				}
+			]
+		}
+	]
+}

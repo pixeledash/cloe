@@ -13,6 +13,13 @@ import Dashboard from '../pages/Dashboard';
 import MFASettings from '../pages/MFASettings';
 import AdminPanel from '../pages/AdminPanel';
 import ProfileSettings from '../pages/ProfileSettings';
+import Subjects from '../pages/Subjects';
+import Classes from '../pages/Classes';
+import Students from '../pages/Students';
+import StartSession from '../pages/StartSession';
+import ActiveSessions from '../pages/ActiveSessions';
+import MarkAttendance from '../pages/MarkAttendance';
+import SessionAttendance from '../pages/SessionAttendance';
 
 const AppRoutes = () => {
   return (
@@ -42,56 +49,23 @@ const AppRoutes = () => {
             <Route path="/admin/users" element={<AdminPanel />} />
             
             {/* Placeholder routes for other modules - will be implemented later */}
-            <Route path="/academics/classes" element={
-              <div className="flex justify-center items-center h-96">
-                <div className="text-center">
-                  <h2 className="text-2xl font-bold text-gray-900 mb-2">Classes</h2>
-                  <p className="text-gray-600">Coming Soon</p>
-                </div>
-              </div>
-            } />
-            <Route path="/academics/students" element={
-              <div className="flex justify-center items-center h-96">
-                <div className="text-center">
-                  <h2 className="text-2xl font-bold text-gray-900 mb-2">Students</h2>
-                  <p className="text-gray-600">Coming Soon</p>
-                </div>
-              </div>
-            } />
-            <Route path="/academics/subjects" element={
-              <div className="flex justify-center items-center h-96">
-                <div className="text-center">
-                  <h2 className="text-2xl font-bold text-gray-900 mb-2">Subjects</h2>
-                  <p className="text-gray-600">Coming Soon</p>
-                </div>
-              </div>
-            } />
+            <Route path="/academics/classes" element={<Classes />} />
+            <Route path="/academics/students" element={<Students />} />
+            <Route path="/academics/subjects" element={<Subjects />} />
             
-            <Route path="/sessions/start" element={
-              <div className="flex justify-center items-center h-96">
-                <div className="text-center">
-                  <h2 className="text-2xl font-bold text-gray-900 mb-2">Start Session</h2>
-                  <p className="text-gray-600">Coming Soon</p>
-                </div>
-              </div>
-            } />
-            <Route path="/sessions/active" element={
-              <div className="flex justify-center items-center h-96">
-                <div className="text-center">
-                  <h2 className="text-2xl font-bold text-gray-900 mb-2">Active Sessions</h2>
-                  <p className="text-gray-600">Coming Soon</p>
-                </div>
-              </div>
-            } />
+            {/* Session Management - Module 3 */}
+            <Route path="/start-session" element={<StartSession />} />
+            <Route path="/active-sessions" element={<ActiveSessions />} />
+            <Route path="/sessions/start" element={<StartSession />} />
+            <Route path="/sessions/active" element={<ActiveSessions />} />
             
-            <Route path="/attendance/mark" element={
-              <div className="flex justify-center items-center h-96">
-                <div className="text-center">
-                  <h2 className="text-2xl font-bold text-gray-900 mb-2">Mark Attendance</h2>
-                  <p className="text-gray-600">Coming Soon</p>
-                </div>
-              </div>
-            } />
+            {/* Attendance Tracking - Module 4 */}
+            <Route path="/mark-attendance" element={<MarkAttendance />} />
+            <Route path="/session-attendance" element={<SessionAttendance />} />
+            <Route path="/session-attendance/:sessionId" element={<SessionAttendance />} />
+            <Route path="/attendance/mark" element={<MarkAttendance />} />
+            <Route path="/attendance/session" element={<SessionAttendance />} />
+            <Route path="/attendance/session/:sessionId" element={<SessionAttendance />} />
             
             <Route path="/analytics/student" element={
               <div className="flex justify-center items-center h-96">

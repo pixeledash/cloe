@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Low Attendance Alert</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      line-height: 1.6;
+      color: #333;
+      max-width: 600px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+
+    .header {
+      background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+      color: white;
+      padding: 30px;
+      border-radius: 10px 10px 0 0;
+      text-align: center;
+    }
+
+    .alert-icon {
+      font-size: 64px;
+      margin-bottom: 10px;
+    }
+
+    .content {
+      background: #f8f9fa;
+      padding: 30px;
+      border-radius: 0 0 10px 10px;
+    }
+
+    .alert-box {
+      background: #fff3cd;
+      border-left: 6px solid #ffc107;
+      padding: 20px;
+      margin: 20px 0;
+      border-radius: 6px;
+    }
+
+    .danger-box {
+      background: #f8d7da;
+      border-left: 6px solid #dc3545;
+      padding: 20px;
+      margin: 20px 0;
+      border-radius: 6px;
+    }
+
+    .stats-card {
+      background: white;
+      border-radius: 8px;
+      padding: 20px;
+      margin: 20px 0;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      text-align: center;
+    }
+
+    .attendance-rate {
+      font-size: 64px;
+      font-weight: bold;
+      color: #dc3545;
+      margin: 20px 0;
+    }
+
+    .absences-list {
+      background: white;
+      border-radius: 6px;
+      padding: 20px;
+      margin: 20px 0;
+    }
+
+    .absence-item {
+      padding: 12px;
+      margin: 8px 0;
+      border-left: 4px solid #dc3545;
+      background: #f8f9fa;
+      border-radius: 4px;
+    }
+
+    .action-steps {
+      background: white;
+      border-radius: 8px;
+      padding: 20px;
+      margin: 20px 0;
+    }
+
+    .action-steps ol {
+      padding-left: 20px;
+    }
+
+    .action-steps li {
+      margin: 10px 0;
+    }
+
+    .footer {
+      text-align: center;
+      margin-top: 30px;
+      padding-top: 20px;
+      border-top: 1px solid #e0e0e0;
+      color: #6c757d;
+      font-size: 14px;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="header">
+    <div class="alert-icon">⚠️</div>
+    <h1>Low Attendance Alert</h1>
+    <p>Action Required</p>
+  </div>
+
+  <div class="content">
+    <p>Dear {{ recipient_name }},</p>
+
+    <div class="danger-box">
+      <h2 style="margin-top: 0; color: #dc3545;">⚠️ Your attendance has fallen below the required threshold</h2>
+      <p style="font-size: 16px; margin: 0;">
+        Immediate action is needed to improve your attendance and avoid academic consequences.
+      </p>
+    </div>
+
+    <div class="stats-card">
+      <h3 style="margin-top: 0;">Current Attendance Rate</h3>
+      <div class="attendance-rate">{{ attendance_rate }}%</div>
+      <p style="color: #6c757d;">
+        Required Minimum: <strong>{{ threshold }}%</strong><br>
+        You are <strong style="color: #dc3545;">{{ percentage_below }}%</strong> below the threshold
+      </p>
+    </div>
+
+    {% if recent_absences %}
+    <div class="absences-list">
+      <h3 style="margin-top: 0;">Recent Absences (Last {{ total_absences }})</h3>
+      {% for absence in recent_absences %}
+      <div class="absence-item">
+        <strong>{{ absence.date|date:"l, F d, Y" }}</strong><br>
+        Class: {{ absence.class_name }}
+      </div>
+      {% endfor %}
+    </div>
+    {% endif %}
+
+    <div class="action-steps">
+      <h3 style="margin-top: 0; color: #dc3545;">📋 Required Actions</h3>
+      <ol>
+        <li><strong>Attend All Upcoming Classes:</strong> Make attendance your top priority to improve your rate</li>
+        <li><strong>Contact Your Teachers:</strong> Discuss your attendance situation and any challenges you're facing
+        </li>
+        <li><strong>Review Absence Policies:</strong> Understand the consequences of continued low attendance</li>
+        <li><strong>Set Up Reminders:</strong> Use calendar alerts to ensure you don't miss classes</li>
+        <li><strong>Seek Support:</strong> If personal issues are affecting your attendance, contact student services
+        </li>
+      </ol>
+    </div>
+
+    <div class="alert-box">
+      <h4 style="margin-top: 0;">⏰ What Happens Next?</h4>
+      <p>
+        Continued low attendance may result in:
+      </p>
+      <ul>
+        <li>Academic warnings</li>
+        <li>Ineligibility for exams</li>
+        <li>Impact on final grades</li>
+        <li>Disciplinary action</li>
+      </ul>
+      <p style="margin-bottom: 0;">
+        <strong>Please take immediate steps to improve your attendance.</strong>
+      </p>
+    </div>
+
+    <div
+      style="background: #d4edda; border-left: 4px solid #28a745; padding: 15px; border-radius: 6px; margin: 20px 0;">
+      <strong>💚 Need Help?</strong><br>
+      If you're struggling with attendance due to health, personal, or academic issues,
+      please reach out to your teachers or the student support services. We're here to help!
+    </div>
+  </div>
+
+  <div class="footer">
+    <p><strong>Smart Classroom Attendance System</strong></p>
+    <p>This is an automated alert. Please contact your teacher or administrator for assistance.</p>
+  </div>
+</body>
+
+</html>

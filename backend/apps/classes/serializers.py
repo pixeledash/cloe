@@ -62,13 +62,25 @@ class StudentSerializer(serializers.ModelSerializer):
 class StudentListSerializer(serializers.ModelSerializer):
     """Lightweight serializer for listing students"""
     full_name = serializers.SerializerMethodField()
+    enrolled_classes = serializers.SerializerMethodField()
     
     class Meta:
         model = Student
-        fields = ['id', 'student_id', 'full_name', 'email', 'major']
+        fields = ['id', 'student_id', 'full_name', 'email', 'major', 'enrolled_classes']
     
     def get_full_name(self, obj):
         return obj.get_full_name()
+    
+    def get_enrolled_classes(self, obj):
+        """Get list of classes this student is enrolled in"""
+        enrollments = obj.enrolled_classes.select_related('class_instance').all()
+        return [
+            {
+                'id': enrollment.class_instance.id,
+                'name': enrollment.class_instance.name,
+            }
+            for enrollment in enrollments
+        ]
 
 
 class ClassSerializer(serializers.ModelSerializer):

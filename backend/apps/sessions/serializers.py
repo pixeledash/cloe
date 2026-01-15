@@ -17,16 +17,20 @@ class ClassSessionListSerializer(serializers.ModelSerializer):
     Lightweight serializer for session lists
     Shows minimal info for performance
     """
+    class_id = serializers.UUIDField(source='class_ref.id', read_only=True)
     class_name = serializers.CharField(source='class_ref.name', read_only=True)
     subject_code = serializers.CharField(source='subject.code', read_only=True)
     subject_name = serializers.CharField(source='subject.name', read_only=True)
     teacher_name = serializers.SerializerMethodField()
     duration = serializers.CharField(source='duration_formatted', read_only=True)
+    student_count = serializers.SerializerMethodField()
+    is_active = serializers.BooleanField(read_only=True)
     
     class Meta:
         model = ClassSession
         fields = [
             'id',
+            'class_id',
             'class_name',
             'subject_code',
             'subject_name',
@@ -34,13 +38,19 @@ class ClassSessionListSerializer(serializers.ModelSerializer):
             'start_time',
             'end_time',
             'status',
-            'duration'
+            'duration',
+            'student_count',
+            'is_active'
         ]
         read_only_fields = ['id', 'start_time', 'end_time', 'status']
     
     def get_teacher_name(self, obj):
         """Get teacher's full name"""
         return obj.teacher.user.get_full_name()
+    
+    def get_student_count(self, obj):
+        """Get total number of students enrolled in the class"""
+        return obj.class_ref.enrolled_students.count()
 
 
 class ClassSessionDetailSerializer(serializers.ModelSerializer):

@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Weekly Attendance Report</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      line-height: 1.6;
+      color: #333;
+      max-width: 600px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+
+    .header {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 30px;
+      border-radius: 10px 10px 0 0;
+      text-align: center;
+    }
+
+    .content {
+      background: #f8f9fa;
+      padding: 30px;
+      border-radius: 0 0 10px 10px;
+    }
+
+    .summary-card {
+      background: white;
+      border-radius: 8px;
+      padding: 20px;
+      margin: 20px 0;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 15px;
+      margin: 20px 0;
+    }
+
+    .stat-box {
+      background: #f8f9fa;
+      padding: 15px;
+      border-radius: 6px;
+      text-align: center;
+    }
+
+    .stat-value {
+      font-size: 32px;
+      font-weight: bold;
+      color: #667eea;
+    }
+
+    .stat-label {
+      font-size: 14px;
+      color: #6c757d;
+      margin-top: 5px;
+    }
+
+    .class-section {
+      margin: 20px 0;
+    }
+
+    .class-header {
+      background: #667eea;
+      color: white;
+      padding: 10px 15px;
+      border-radius: 6px;
+      font-weight: bold;
+    }
+
+    .class-stats {
+      padding: 15px;
+      background: white;
+      border: 1px solid #e0e0e0;
+      border-top: none;
+      border-radius: 0 0 6px 6px;
+    }
+
+    .session-record {
+      padding: 10px;
+      margin: 5px 0;
+      border-left: 4px solid #667eea;
+      background: #f8f9fa;
+    }
+
+    .status-present {
+      border-left-color: #28a745;
+    }
+
+    .status-absent {
+      border-left-color: #dc3545;
+    }
+
+    .status-late {
+      border-left-color: #ffc107;
+    }
+
+    .warning-box {
+      background: #fff3cd;
+      border-left: 4px solid #ffc107;
+      padding: 15px;
+      margin: 20px 0;
+      border-radius: 6px;
+    }
+
+    .footer {
+      text-align: center;
+      margin-top: 30px;
+      padding-top: 20px;
+      border-top: 1px solid #e0e0e0;
+      color: #6c757d;
+      font-size: 14px;
+    }
+
+    .attendance-rate {
+      font-size: 48px;
+      font-weight: bold;
+      margin: 20px 0;
+    }
+
+    .rate-good {
+      color: #28a745;
+    }
+
+    .rate-warning {
+      color: #ffc107;
+    }
+
+    .rate-poor {
+      color: #dc3545;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="header">
+    <h1>📊 Weekly Attendance Report</h1>
+    <p>{{ start_date|date:"M d, Y" }} - {{ end_date|date:"M d, Y" }}</p>
+  </div>
+
+  <div class="content">
+    <p>Hello {{ recipient_name }},</p>
+
+    <p>Here's your weekly attendance summary:</p>
+
+    <div class="summary-card">
+      <h2 style="text-align: center; margin-top: 0;">Overall Attendance</h2>
+      <div
+        class="attendance-rate {% if attendance_rate >= 90 %}rate-good{% elif attendance_rate >= 75 %}rate-warning{% else %}rate-poor{% endif %}"
+        style="text-align: center;">
+        {{ attendance_rate }}%
+      </div>
+
+      <div class="stats-grid">
+        <div class="stat-box">
+          <div class="stat-value" style="color: #28a745;">{{ present_count }}</div>
+          <div class="stat-label">Present</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-value" style="color: #dc3545;">{{ absent_count }}</div>
+          <div class="stat-label">Absent</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-value" style="color: #ffc107;">{{ late_count }}</div>
+          <div class="stat-label">Late</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-value">{{ total_sessions }}</div>
+          <div class="stat-label">Total Sessions</div>
+        </div>
+      </div>
+    </div>
+
+    {% if low_attendance_warning %}
+    <div class="warning-box">
+      <strong>⚠️ Attendance Warning</strong><br>
+      Your attendance is below 75%. Please make sure to attend your classes regularly to maintain good academic
+      standing.
+    </div>
+    {% endif %}
+
+    {% if classes %}
+    <h3>Breakdown by Class</h3>
+    {% for class in classes %}
+    <div class="class-section">
+      <div class="class-header">
+        {{ class.name }}
+      </div>
+      <div class="class-stats">
+        <p><strong>Class Attendance Rate:</strong>
+          <span
+            style="color: {% if class.attendance_rate >= 90 %}#28a745{% elif class.attendance_rate >= 75 %}#ffc107{% else %}#dc3545{% endif %};">
+            {{ class.attendance_rate|floatformat:1 }}%
+          </span>
+        </p>
+        <p><strong>Sessions:</strong> {{ class.sessions|length }}
+          (✓ {{ class.present }} | ✗ {{ class.absent }} | ⏰ {{ class.late }})</p>
+
+        <div style="margin-top: 15px;">
+          <strong>Recent Sessions:</strong>
+          {% for session in class.sessions|slice:":5" %}
+          <div class="session-record status-{{ session.status|lower }}">
+            <strong>{{ session.date|date:"M d, Y" }}</strong> -
+            Status: <strong>{{ session.status }}</strong>
+            {% if session.marked_at %}
+            (Marked at {{ session.marked_at|date:"h:i A" }})
+            {% endif %}
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+    {% endif %}
+
+    <div style="margin-top: 30px; padding: 20px; background: white; border-radius: 6px;">
+      <h3 style="margin-top: 0;">💡 Tips for Better Attendance</h3>
+      <ul>
+        <li>Set reminders for your class schedule</li>
+        <li>Inform your teacher in advance if you'll be absent</li>
+        <li>Keep track of your attendance regularly</li>
+        <li>Aim for at least 90% attendance for optimal learning</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="footer">
+    <p>This is an automated report from Smart Classroom Attendance System</p>
+    <p>If you have any questions, please contact your teacher or administrator</p>
+  </div>
+</body>
+
+</html>

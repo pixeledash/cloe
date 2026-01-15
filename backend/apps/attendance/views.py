@@ -225,6 +225,7 @@ class AttendanceViewSet(viewsets.ModelViewSet):
         for record in records:
             records_data.append({
                 'id': str(record.id),
+                'student_uuid': str(record.student.id),  # Add student UUID
                 'student_id': record.student.student_id,
                 'student_name': record.student.get_full_name(),
                 'student_email': record.student.email,

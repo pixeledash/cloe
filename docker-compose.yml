@@ -18,6 +18,17 @@ services:
       timeout: 5s
       retries: 5
 
+  redis:
+    image: redis:7-alpine
+    container_name: redis_broker
+    ports:
+      - "6379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+
   backend:
     build: ./backend
     container_name: django_backend
@@ -27,12 +38,58 @@ services:
       - DATABASE_NAME=smart_classroom
       - DATABASE_USER=classroom_user
       - DATABASE_PASSWORD=securepass
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
     depends_on:
       db:
         condition: service_healthy
+      redis:
+        condition: service_healthy
     ports:
       - "8000:8000"
+    volumes:
+      - ./backend:/app
     command: sh -c "python manage.py migrate && python manage.py runserver 0.0.0.0:8000"
+
+  celery:
+    build: ./backend
+    container_name: celery_worker
+    environment:
+      - DJANGO_SETTINGS_MODULE=classroom_api.settings
+      - DATABASE_HOST=db
+      - DATABASE_NAME=smart_classroom
+      - DATABASE_USER=classroom_user
+      - DATABASE_PASSWORD=securepass
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    volumes:
+      - ./backend:/app
+    command: celery -A classroom_api worker --loglevel=info
+
+  celery-beat:
+    build: ./backend
+    container_name: celery_beat
+    environment:
+      - DJANGO_SETTINGS_MODULE=classroom_api.settings
+      - DATABASE_HOST=db
+      - DATABASE_NAME=smart_classroom
+      - DATABASE_USER=classroom_user
+      - DATABASE_PASSWORD=securepass
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    volumes:
+      - ./backend:/app
+    command: celery -A classroom_api beat --loglevel=info
 
   frontend:
     build: ./frontend
@@ -44,4 +101,3 @@ services:
 
 volumes:
   db_data:
-

@@ -182,6 +182,19 @@ class StudentViewSet(viewsets.ModelViewSet):
     ordering_fields = ['student_id', 'last_name', 'enrollment_date']
     ordering = ['student_id']
     
+    def get_queryset(self):
+        """
+        Optionally filter students by class
+        """
+        queryset = super().get_queryset()
+        class_id = self.request.query_params.get('class_id', None)
+        
+        if class_id:
+            # Filter students enrolled in the specified class
+            queryset = queryset.filter(enrolled_classes__class_instance__id=class_id).distinct()
+        
+        return queryset
+    
     def get_serializer_class(self):
         if self.action == 'list':
             return StudentListSerializer

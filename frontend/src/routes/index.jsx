@@ -23,6 +23,7 @@ import SessionAttendance from '../pages/SessionAttendance';
 import AnalyticsDashboard from '../pages/AnalyticsDashboard';
 import StudentAnalytics from '../pages/StudentAnalytics';
 import ClassAnalytics from '../pages/ClassAnalytics';
+import NotificationsManager from '../pages/NotificationsManager';
 
 const AppRoutes = () => {
   return (
@@ -75,15 +76,8 @@ const AppRoutes = () => {
             <Route path="/analytics/student/:studentId" element={<StudentAnalytics />} />
             <Route path="/analytics/class/:classId" element={<ClassAnalytics />} />
             
-            {/* Notifications - Module 7 (Coming Soon) */}
-            <Route path="/notifications/weekly" element={
-              <div className="flex justify-center items-center h-96">
-                <div className="text-center">
-                  <h2 className="text-2xl font-bold text-gray-900 mb-2">Weekly Mail</h2>
-                  <p className="text-gray-600">Coming Soon</p>
-                </div>
-              </div>
-            } />
+            {/* Notifications - Module 7 */}
+            <Route path="/notifications" element={<NotificationsManager />} />
             
             <Route path="/profile" element={
               <div className="flex justify-center items-center h-96">

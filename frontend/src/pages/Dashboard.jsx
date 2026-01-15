@@ -55,18 +55,11 @@ const Dashboard = () => {
       roles: ['ADMIN', 'TEACHER'],
     },
     {
-      title: 'Analytics',
-      description: 'View insights and trends',
-      link: '/analytics/student',
-      icon: '📊',
-      roles: ['ADMIN', 'TEACHER'],
-    },
-    {
-      title: 'Reports',
-      description: 'Generate and download reports',
-      link: '/reports/generate',
-      icon: '📄',
-      roles: ['ADMIN', 'TEACHER'],
+      title: 'Analytics & Reports',
+      description: 'View insights, generate reports, and track performance',
+      link: '/analytics',
+      icon: '�',
+      roles: ['ADMIN', 'TEACHER', 'STUDENT'],
     },
     {
       title: 'Notifications',

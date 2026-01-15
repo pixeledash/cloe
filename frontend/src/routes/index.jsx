@@ -20,6 +20,9 @@ import StartSession from '../pages/StartSession';
 import ActiveSessions from '../pages/ActiveSessions';
 import MarkAttendance from '../pages/MarkAttendance';
 import SessionAttendance from '../pages/SessionAttendance';
+import AnalyticsDashboard from '../pages/AnalyticsDashboard';
+import StudentAnalytics from '../pages/StudentAnalytics';
+import ClassAnalytics from '../pages/ClassAnalytics';
 
 const AppRoutes = () => {
   return (
@@ -67,40 +70,12 @@ const AppRoutes = () => {
             <Route path="/attendance/session" element={<SessionAttendance />} />
             <Route path="/attendance/session/:sessionId" element={<SessionAttendance />} />
             
-            <Route path="/analytics/student" element={
-              <div className="flex justify-center items-center h-96">
-                <div className="text-center">
-                  <h2 className="text-2xl font-bold text-gray-900 mb-2">Student Analytics</h2>
-                  <p className="text-gray-600">Coming Soon</p>
-                </div>
-              </div>
-            } />
-            <Route path="/analytics/class" element={
-              <div className="flex justify-center items-center h-96">
-                <div className="text-center">
-                  <h2 className="text-2xl font-bold text-gray-900 mb-2">Class Analytics</h2>
-                  <p className="text-gray-600">Coming Soon</p>
-                </div>
-              </div>
-            } />
+            {/* Analytics & Reports - Module 5 & 6 Integrated */}
+            <Route path="/analytics" element={<AnalyticsDashboard />} />
+            <Route path="/analytics/student/:studentId" element={<StudentAnalytics />} />
+            <Route path="/analytics/class/:classId" element={<ClassAnalytics />} />
             
-            <Route path="/reports/generate" element={
-              <div className="flex justify-center items-center h-96">
-                <div className="text-center">
-                  <h2 className="text-2xl font-bold text-gray-900 mb-2">Generate Report</h2>
-                  <p className="text-gray-600">Coming Soon</p>
-                </div>
-              </div>
-            } />
-            <Route path="/reports/view" element={
-              <div className="flex justify-center items-center h-96">
-                <div className="text-center">
-                  <h2 className="text-2xl font-bold text-gray-900 mb-2">View Reports</h2>
-                  <p className="text-gray-600">Coming Soon</p>
-                </div>
-              </div>
-            } />
-            
+            {/* Notifications - Module 7 (Coming Soon) */}
             <Route path="/notifications/weekly" element={
               <div className="flex justify-center items-center h-96">
                 <div className="text-center">

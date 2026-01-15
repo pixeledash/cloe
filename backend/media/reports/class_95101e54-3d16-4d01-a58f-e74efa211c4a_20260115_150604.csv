@@ -1,0 +1,8 @@
+Class Attendance Report: Batch 5
+Period: 2026-01-08 to 2026-01-15
+Total Sessions in Period: 3
+
+Student ID,Student Name,Email,Sessions Marked,Present,Absent,Late,Attendance Rate (%)
+0011,ann maria,annmaria@gmail.com,2,2,0,0,100.0
+S001,Excellent Student,excellent.student@test.com,2,2,0,0,100.0
+S002,Good Student,good.student@test.com,2,0,2,0,0.0

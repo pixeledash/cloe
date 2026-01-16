@@ -1,10 +1,26 @@
+"""
+Django settings for classroom_api project.
+
+IMPORTANT: This application requires a .env file with the following variables:
+- SECRET_KEY (required)
+- DATABASE_USER (required)
+- DATABASE_PASSWORD (required)
+- EMAIL_HOST_USER (optional, for email notifications)
+- EMAIL_HOST_PASSWORD (optional, for email notifications)
+
+See .env.example for a template.
+"""
+
 from pathlib import Path
 from datetime import timedelta
 import os
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-SECRET_KEY = os.getenv('SECRET_KEY', 'django-insecure-dev-key-change-in-production')
+# Security: SECRET_KEY must be set in .env file
+SECRET_KEY = os.getenv('SECRET_KEY')
+if not SECRET_KEY:
+    raise ValueError("SECRET_KEY environment variable is not set. Please check your .env file.")
 
 DEBUG = os.getenv('DEBUG', 'True') == 'True'
 
@@ -66,12 +82,18 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': os.getenv('DATABASE_NAME', 'smart_classroom'),
-        'USER': os.getenv('DATABASE_USER', 'classroom_user'),
-        'PASSWORD': os.getenv('DATABASE_PASSWORD', 'securepass'),
+        'USER': os.getenv('DATABASE_USER'),
+        'PASSWORD': os.getenv('DATABASE_PASSWORD'),
         'HOST': os.getenv('DATABASE_HOST', 'db'),
         'PORT': os.getenv('DATABASE_PORT', '5432'),
     }
 }
+
+# Security: Validate required database credentials
+if not DATABASES['default']['USER']:
+    raise ValueError("DATABASE_USER environment variable is not set. Please check your .env file.")
+if not DATABASES['default']['PASSWORD']:
+    raise ValueError("DATABASE_PASSWORD environment variable is not set. Please check your .env file.")
 
 AUTH_PASSWORD_VALIDATORS = [
     {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator'},

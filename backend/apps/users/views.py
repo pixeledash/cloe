@@ -230,3 +230,57 @@ class UpdateUserRolesView(APIView):
         
         serializer = UserSerializer(user)
         return Response(serializer.data)
+
+
+class DeleteUserView(APIView):
+    """Delete a user - Admin only"""
+    permission_classes = [permissions.IsAuthenticated]
+    
+    def delete(self, request, user_id):
+        from django.db.models.deletion import ProtectedError
+        
+        # Check if user is admin
+        if not request.user.has_role('ADMIN'):
+            return Response(
+                {'detail': 'Admin access required'},
+                status=status.HTTP_403_FORBIDDEN
+            )
+        
+        # Prevent self-deletion
+        if str(request.user.id) == str(user_id):
+            return Response(
+                {'detail': 'Cannot delete your own account'},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        
+        try:
+            user = User.objects.get(id=user_id)
+            user_email = user.email
+            
+            # Check if user has a teacher profile with assigned classes
+            if hasattr(user, 'teacher_profile'):
+                teacher = user.teacher_profile
+                if teacher.classes.exists():
+                    class_count = teacher.classes.count()
+                    return Response(
+                        {'detail': f'Cannot delete this teacher. They are assigned to {class_count} class(es). Please reassign or remove their classes first.'},
+                        status=status.HTTP_400_BAD_REQUEST
+                    )
+            
+            user.delete()
+            return Response(
+                {'detail': f'User {user_email} deleted successfully'},
+                status=status.HTTP_200_OK
+            )
+        except User.DoesNotExist:
+            return Response(
+                {'detail': 'User not found'},
+                status=status.HTTP_404_NOT_FOUND
+            )
+        except ProtectedError as e:
+            # Catch any other protected foreign key errors
+            return Response(
+                {'detail': 'Cannot delete this user. They have related records that must be removed first.'},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+

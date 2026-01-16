@@ -184,9 +184,10 @@ class ListNotificationsView(APIView):
             from apps.classes.models import Teacher
             try:
                 teacher = Teacher.objects.get(user=user)
+                # Get emails of students enrolled in teacher's classes
                 student_emails = Student.objects.filter(
-                    enrolled_classes__teacher=teacher
-                ).values_list('email', flat=True)
+                    enrolled_classes__class_instance__teacher=teacher
+                ).values_list('email', flat=True).distinct()
                 queryset = queryset.filter(recipient_email__in=student_emails)
             except Teacher.DoesNotExist:
                 queryset = queryset.none()

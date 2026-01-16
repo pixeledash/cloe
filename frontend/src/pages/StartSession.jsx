@@ -237,7 +237,7 @@ export default function StartSession() {
                 Starting Session...
               </span>
             ) : (
-              '🚀 Start Session'
+              'Start Session'
             )}
           </button>
           
@@ -254,7 +254,7 @@ export default function StartSession() {
 
       {/* Help Text */}
       <div className="mt-6 p-4 bg-gray-50 border border-gray-200 rounded-lg">
-        <h3 className="font-semibold text-gray-900 mb-2">ℹ️ Instructions</h3>
+        <h3 className="font-semibold text-gray-900 mb-2">Instructions</h3>
         <ul className="text-sm text-gray-600 space-y-1 list-disc list-inside">
           <li>Select the class you want to start a session for</li>
           <li>Review the class details to ensure it's correct</li>

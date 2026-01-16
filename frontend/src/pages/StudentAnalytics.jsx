@@ -5,6 +5,7 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { analyticsService } from '../api/analyticsService';
+import reportsService from '../api/reportsService';
 import StatCard from '../components/StatCard';
 import RiskBadge from '../components/RiskBadge';
 import TrendIndicator from '../components/TrendIndicator';
@@ -17,6 +18,7 @@ export default function StudentAnalytics() {
   const [analytics, setAnalytics] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [exportingReport, setExportingReport] = useState(false);
 
   useEffect(() => {
     if (studentId) {
@@ -42,45 +44,21 @@ export default function StudentAnalytics() {
     }
   };
 
-  const exportToCSV = () => {
+  const exportToCSV = async () => {
     if (!analytics) return;
 
-    const csvData = [
-      ['Student Analytics Report'],
-      [''],
-      ['Student Name', analytics.student_name],
-      ['Student Email', analytics.student_email],
-      [''],
-      ['Overall Statistics'],
-      ['Total Sessions', analytics.total_sessions],
-      ['Attendance Rate', `${analytics.attendance_rate}%`],
-      ['Present Count', analytics.present_count],
-      ['Absent Count', analytics.absent_count],
-      ['Late Count', analytics.late_count],
-      ['Punctuality Rate', `${analytics.punctuality_rate}%`],
-      ['Risk Level', analytics.risk_level],
-      ['Recent Trend', analytics.recent_trend],
-      ['Consecutive Absences', analytics.consecutive_absences],
-      [''],
-      ['Class Breakdown'],
-      ['Class Name', 'Subject', 'Teacher', 'Sessions', 'Attendance Rate'],
-      ...analytics.classes_enrolled.map(c => [
-        c.class_name,
-        c.subject,
-        c.teacher,
-        c.sessions_in_class,
-        `${c.attendance_rate}%`
-      ])
-    ];
-
-    const csv = csvData.map(row => row.join(',')).join('\n');
-    const blob = new Blob([csv], { type: 'text/csv' });
-    const url = window.URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `student-analytics-${analytics.student_name.replace(/\s+/g, '-')}-${new Date().toISOString().split('T')[0]}.csv`;
-    a.click();
-    window.URL.revokeObjectURL(url);
+    try {
+      setExportingReport(true);
+      await reportsService.generateAndDownloadStudentReport(
+        studentId,
+        analytics.student_name
+      );
+    } catch (error) {
+      console.error('Error exporting report:', error);
+      alert('Failed to generate report. Please try again.');
+    } finally {
+      setExportingReport(false);
+    }
   };
 
   if (loading) {
@@ -144,11 +122,27 @@ export default function StudentAnalytics() {
           <p className="text-gray-600">Comprehensive attendance insights and trends</p>
         </div>
         <div className="flex gap-3">
-          <button onClick={exportToCSV} className="btn-secondary">
-            📥 Export CSV
+          <button 
+            onClick={exportToCSV} 
+            className="btn-secondary"
+            disabled={exportingReport}
+          >
+            {exportingReport ? (
+              <>
+                <svg className="animate-spin h-5 w-5 inline-block mr-2" viewBox="0 0 24 24">
+                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
+                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+                </svg>
+                Generating...
+              </>
+            ) : (
+              <>
+                <i className="fi fi-ss-download"></i> Export CSV
+              </>
+            )}
           </button>
           <button onClick={() => navigate('/dashboard')} className="btn-secondary">
-            ← Back
+            <i className="fi fi-ss-arrow-left"></i> Back
           </button>
         </div>
       </div>

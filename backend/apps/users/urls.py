@@ -11,6 +11,7 @@ from .views import (
     RoleViewSet,
     UserListView,
     UpdateUserRolesView,
+    DeleteUserView,
 )
 
 router = DefaultRouter()
@@ -26,5 +27,6 @@ urlpatterns = [
     path('mfa/disable/', MFADisableView.as_view(), name='mfa-disable'),
     path('list/', UserListView.as_view(), name='user-list'),
     path('<uuid:user_id>/update-roles/', UpdateUserRolesView.as_view(), name='update-user-roles'),
+    path('<uuid:user_id>/delete/', DeleteUserView.as_view(), name='delete-user'),
     path('', include(router.urls)),
 ]

@@ -1,0 +1,7 @@
+Class Attendance Report: Batch 4
+Period: 2025-12-17 to 2026-01-16
+Total Sessions in Period: 4
+
+Student ID,Student Name,Email,Sessions Marked,Present,Absent,Late,Attendance Rate (%)
+S002,Good Student,good.student@test.com,2,2,0,0,100.0
+009,ash pro,ashmalpro@gmail.com,2,0,2,0,0.0

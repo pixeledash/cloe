@@ -5,6 +5,7 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { analyticsService } from '../api/analyticsService';
+import reportsService from '../api/reportsService';
 import StatCard from '../components/StatCard';
 import TrendIndicator from '../components/TrendIndicator';
 import AttendanceRateGauge from '../components/AttendanceRateGauge';
@@ -16,6 +17,7 @@ export default function ClassAnalytics() {
   const [analytics, setAnalytics] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [exportingReport, setExportingReport] = useState(false);
   const [activeTab, setActiveTab] = useState('chronic'); // chronic, at-risk, perfect
   const [sortConfig, setSortConfig] = useState({ key: 'attendance_rate', direction: 'asc' });
   const [searchQuery, setSearchQuery] = useState('');
@@ -75,44 +77,21 @@ export default function ClassAnalytics() {
     });
   };
 
-  const exportToCSV = () => {
+  const exportToCSV = async () => {
     if (!analytics) return;
 
-    const csvData = [
-      ['Class Analytics Report'],
-      [''],
-      ['Class Information'],
-      ['Class Name', analytics.class_info.class_name],
-      ['Subject', analytics.class_info.subject],
-      ['Teacher', analytics.class_info.teacher],
-      ['Schedule', analytics.class_info.schedule],
-      [''],
-      ['Overall Statistics'],
-      ['Total Students', analytics.total_students],
-      ['Total Sessions', analytics.total_sessions],
-      ['Overall Attendance Rate', `${analytics.overall_attendance_rate}%`],
-      [''],
-      ['Student Performance'],
-      ['Student Name', 'Email', 'Sessions Attended', 'Present', 'Absent', 'Late', 'Attendance Rate'],
-      ...analytics.student_statistics.map(s => [
-        s.student_name,
-        s.student_email,
-        s.sessions_attended,
-        s.present,
-        s.absent,
-        s.late,
-        `${s.attendance_rate}%`
-      ])
-    ];
-
-    const csv = csvData.map(row => row.join(',')).join('\n');
-    const blob = new Blob([csv], { type: 'text/csv' });
-    const url = window.URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `class-analytics-${analytics.class_info.class_name.replace(/\s+/g, '-')}-${new Date().toISOString().split('T')[0]}.csv`;
-    a.click();
-    window.URL.revokeObjectURL(url);
+    try {
+      setExportingReport(true);
+      await reportsService.generateAndDownloadClassReport(
+        classId,
+        analytics.class_info.class_name
+      );
+    } catch (error) {
+      console.error('Error exporting report:', error);
+      alert('Failed to generate report. Please try again.');
+    } finally {
+      setExportingReport(false);
+    }
   };
 
   if (loading) {
@@ -165,11 +144,27 @@ export default function ClassAnalytics() {
           <p className="text-gray-600">Performance insights and attendance trends</p>
         </div>
         <div className="flex gap-3">
-          <button onClick={exportToCSV} className="btn-secondary">
-            📥 Export CSV
+          <button 
+            onClick={exportToCSV} 
+            className="btn-secondary"
+            disabled={exportingReport}
+          >
+            {exportingReport ? (
+              <>
+                <svg className="animate-spin h-5 w-5 inline-block mr-2" viewBox="0 0 24 24">
+                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
+                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+                </svg>
+                Generating...
+              </>
+            ) : (
+              <>
+                <i className="fi fi-ss-download"></i> Export CSV
+              </>
+            )}
           </button>
           <button onClick={() => navigate('/dashboard')} className="btn-secondary">
-            ← Back
+            <i className="fi fi-ss-arrow-left"></i> Back
           </button>
         </div>
       </div>

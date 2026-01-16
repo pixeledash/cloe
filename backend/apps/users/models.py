@@ -57,10 +57,12 @@ class Role(models.Model):
     """
     ADMIN = 'ADMIN'
     TEACHER = 'TEACHER'
+    STUDENT = 'STUDENT'
     
     ROLE_CHOICES = [
         (ADMIN, 'Admin'),
         (TEACHER, 'Teacher'),
+        (STUDENT, 'Student'),
     ]
     
     name = models.CharField(max_length=30, choices=ROLE_CHOICES, unique=True)

@@ -57,6 +57,78 @@ export const reportsService = {
     document.body.removeChild(link);
     window.URL.revokeObjectURL(url);
   },
+
+  /**
+   * Generate and immediately download a student report
+   * @param {string} studentId - Student UUID
+   * @param {string} studentName - Student name (for filename)
+   * @param {string} startDate - Start date (YYYY-MM-DD, optional)
+   * @param {string} endDate - End date (YYYY-MM-DD, optional)
+   */
+  async generateAndDownloadStudentReport(studentId, studentName, startDate = null, endDate = null) {
+    try {
+      // Use default date range if not provided (last 30 days to today)
+      const end = endDate || new Date().toISOString().split('T')[0];
+      const start = startDate || new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0];
+
+      // Generate report
+      const report = await this.generateReport({
+        report_type: 'student',
+        student_id: studentId,
+        start_date: start,
+        end_date: end,
+        format: 'csv'
+      });
+
+      // Download the file
+      const response = await this.downloadReport(report.id);
+      
+      // Trigger download with proper filename
+      const filename = `student-report-${studentName.replace(/\s+/g, '-')}-${new Date().toISOString().split('T')[0]}.csv`;
+      this.triggerDownload(response.data, filename);
+      
+      return report;
+    } catch (error) {
+      console.error('Error generating student report:', error);
+      throw error;
+    }
+  },
+
+  /**
+   * Generate and immediately download a class report
+   * @param {string} classId - Class UUID
+   * @param {string} className - Class name (for filename)
+   * @param {string} startDate - Start date (YYYY-MM-DD, optional)
+   * @param {string} endDate - End date (YYYY-MM-DD, optional)
+   */
+  async generateAndDownloadClassReport(classId, className, startDate = null, endDate = null) {
+    try {
+      // Use default date range if not provided (last 30 days to today)
+      const end = endDate || new Date().toISOString().split('T')[0];
+      const start = startDate || new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0];
+
+      // Generate report
+      const report = await this.generateReport({
+        report_type: 'class',
+        class_id: classId,
+        start_date: start,
+        end_date: end,
+        format: 'csv'
+      });
+
+      // Download the file
+      const response = await this.downloadReport(report.id);
+      
+      // Trigger download with proper filename
+      const filename = `class-report-${className.replace(/\s+/g, '-')}-${new Date().toISOString().split('T')[0]}.csv`;
+      this.triggerDownload(response.data, filename);
+      
+      return report;
+    } catch (error) {
+      console.error('Error generating class report:', error);
+      throw error;
+    }
+  }
 };
 
 export default reportsService;

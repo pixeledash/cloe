@@ -88,24 +88,34 @@ export default function SessionAttendance() {
   const handleExport = () => {
     if (!attendanceRecords.length) return;
     
+    // Helper function to properly escape CSV fields
+    const escapeCSVField = (field) => {
+      if (field === null || field === undefined) return '';
+      const stringField = String(field);
+      // Wrap in quotes and escape existing quotes
+      return `"${stringField.replace(/"/g, '""')}"`;
+    };
+    
     // Create CSV content
     const headers = ['Student ID', 'Student Name', 'Email', 'Status', 'Marked At', 'Notes'];
     const rows = attendanceRecords.map(record => [
-      record.student_id,
-      record.student_name || 'N/A',
-      record.student_email || 'N/A',
-      record.status,
-      record.marked_at ? new Date(record.marked_at).toLocaleString() : 'Not marked',
-      record.notes || ''
+      escapeCSVField(record.student_id),
+      escapeCSVField(record.student_name || 'N/A'),
+      escapeCSVField(record.student_email || 'N/A'),
+      escapeCSVField(record.status),
+      escapeCSVField(record.marked_at ? new Date(record.marked_at).toLocaleString() : 'Not marked'),
+      escapeCSVField(record.notes || '')
     ]);
     
-    const csvContent = [
-      headers.join(','),
-      ...rows.map(row => row.map(cell => `"${cell}"`).join(','))
-    ].join('\n');
+    const csvRows = [
+      headers.map(escapeCSVField).join(','),
+      ...rows.map(row => row.join(','))
+    ];
+    
+    const csvContent = csvRows.join('\n');
     
     // Download file
-    const blob = new Blob([csvContent], { type: 'text/csv' });
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
     const url = window.URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
@@ -387,7 +397,7 @@ export default function SessionAttendance() {
                 disabled={!attendanceRecords.length}
                 className="btn-secondary whitespace-nowrap"
               >
-                📥 Export CSV
+                <i className="fi fi-ss-download"></i> Export CSV
               </button>
             </div>
           </div>

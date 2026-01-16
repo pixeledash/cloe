@@ -27,7 +27,11 @@ const AdminPanel = () => {
 
       // Fetch available roles
       const rolesResponse = await axiosInstance.get('/users/roles/');
-      setRoles(rolesResponse.data);
+      // Filter out lowercase "teacher" role, keep only "TEACHER"
+      const filteredRoles = rolesResponse.data.filter(role => 
+        role.name !== 'teacher'
+      );
+      setRoles(filteredRoles);
     } catch (err) {
       setError('Failed to load data: ' + (err.response?.data?.detail || err.message));
     } finally {
@@ -79,6 +83,28 @@ const AdminPanel = () => {
   const saveRoleChanges = () => {
     if (selectedUser) {
       handleUpdateRoles(selectedUser.id, selectedUser.roles);
+    }
+  };
+
+  const handleDeleteUser = async (userId, userEmail) => {
+    if (!confirm(`Are you sure you want to delete user "${userEmail}"? This action cannot be undone.`)) {
+      return;
+    }
+
+    setLoading(true);
+    setError('');
+    setSuccess('');
+
+    try {
+      await axiosInstance.delete(`/users/${userId}/delete/`);
+      setSuccess(`User "${userEmail}" deleted successfully!`);
+      
+      // Refresh user list
+      await fetchData();
+    } catch (err) {
+      setError(err.response?.data?.detail || 'Failed to delete user');
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -193,12 +219,22 @@ const AdminPanel = () => {
                         )}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-right">
-                        <button
-                          onClick={() => handleEditRoles(user)}
-                          className="text-purple-600 hover:text-purple-800 font-semibold text-sm"
-                        >
-                          Manage Roles
-                        </button>
+                        <div className="flex justify-end gap-2">
+                          <button
+                            onClick={() => handleEditRoles(user)}
+                            className="text-purple-600 hover:text-purple-800 font-semibold text-sm"
+                          >
+                            Manage Roles
+                          </button>
+                          <span className="text-gray-300">|</span>
+                          <button
+                            onClick={() => handleDeleteUser(user.id, user.email)}
+                            className="text-red-600 hover:text-red-800 font-semibold text-sm"
+                            disabled={loading}
+                          >
+                            Delete
+                          </button>
+                        </div>
                       </td>
                     </tr>
                   ))

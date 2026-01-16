@@ -287,7 +287,9 @@ export default function ActiveSessions() {
         </div>
       ) : sessions.length === 0 ? (
         <div className="card text-center py-12">
-          <div className="text-6xl mb-4">📝</div>
+          <div className="text-6xl mb-4 text-purple-600">
+            <i className="fi fi-sr-time-forward"></i>
+          </div>
           <h3 className="text-xl font-semibold text-gray-900 mb-2">
             No Active Sessions
           </h3>
@@ -352,31 +354,31 @@ function SessionCard({ session, onEndSession, formatDuration, formatTime }) {
       {/* Details */}
       <div className="space-y-2 mb-4 text-sm">
         <div className="flex items-center gap-2 text-gray-700">
-          <span className="text-gray-500">📚</span>
+          <i className="fi fi-ss-book-alt text-gray-500"></i>
           <span className="font-medium">{session.subject_code}</span>
           <span className="text-gray-400">-</span>
           <span>{session.subject_name}</span>
         </div>
         
         <div className="flex items-center gap-2 text-gray-700">
-          <span className="text-gray-500">👨‍🏫</span>
+          <i className="fi fi-ss-user text-gray-500"></i>
           <span>{session.teacher_name}</span>
         </div>
         
         <div className="flex items-center gap-2 text-gray-700">
-          <span className="text-gray-500">🕐</span>
+          <i className="fi fi-ss-clock text-gray-500"></i>
           <span>Started at {formatTime(session.start_time)}</span>
         </div>
         
         {session.class_room && (
           <div className="flex items-center gap-2 text-gray-700">
-            <span className="text-gray-500">🚪</span>
+            <i className="fi fi-ss-room-service text-gray-500"></i>
             <span>Room {session.class_room}</span>
           </div>
         )}
         
         <div className="flex items-center gap-2 text-gray-700">
-          <span className="text-gray-500">👥</span>
+          <i className="fi fi-ss-users-alt text-gray-500"></i>
           <span>{session.student_count} student{session.student_count !== 1 ? 's' : ''}</span>
         </div>
       </div>

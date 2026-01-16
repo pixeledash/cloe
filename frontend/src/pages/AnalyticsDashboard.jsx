@@ -181,13 +181,13 @@ export default function AnalyticsDashboard() {
       FAILED: 'bg-red-100 text-red-800',
     };
     const icons = {
-      COMPLETED: '✓',
-      PENDING: '⏳',
-      FAILED: '✗',
+      COMPLETED: 'fi fi-ss-check',
+      PENDING: 'fi fi-ss-hourglass',
+      FAILED: 'fi fi-ss-cross',
     };
     return (
       <span className={`px-2 py-1 rounded-full text-xs font-semibold ${styles[status]}`}>
-        {icons[status]} {status}
+        <i className={icons[status]}></i> {status}
       </span>
     );
   };
@@ -206,7 +206,6 @@ export default function AnalyticsDashboard() {
       <div className="mb-6 flex justify-between items-start">
         <div>
           <h1 className="text-3xl font-bold text-gray-900 mb-2">Analytics & Reports</h1>
-          <p className="text-gray-600">View insights, generate reports, and track attendance performance</p>
         </div>
         <button onClick={() => navigate('/dashboard')} className="btn-secondary">
           ← Back to Dashboard
@@ -217,9 +216,10 @@ export default function AnalyticsDashboard() {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
         {/* Student Analytics Card */}
         <div className="card bg-gradient-to-br from-blue-50 to-blue-100 border-blue-200">
-          <div className="text-4xl mb-3">👤</div>
+          <div className="text-4xl mb-3 text-purple-600">
+            <i className="fi fi-ss-user"></i>
+          </div>
           <h3 className="text-xl font-bold text-gray-900 mb-2">Student Analytics</h3>
-          <p className="text-gray-600 mb-4">View detailed attendance analytics for individual students</p>
           
           {loading ? (
             <div className="text-sm text-gray-500">Loading students...</div>
@@ -252,9 +252,10 @@ export default function AnalyticsDashboard() {
 
         {/* Class Analytics Card */}
         <div className="card bg-gradient-to-br from-purple-50 to-purple-100 border-purple-200">
-          <div className="text-4xl mb-3">📚</div>
+          <div className="text-4xl mb-3 text-purple-600">
+            <i className="fi fi-ss-books"></i>
+          </div>
           <h3 className="text-xl font-bold text-gray-900 mb-2">Class Analytics</h3>
-          <p className="text-gray-600 mb-4">View performance metrics and trends for entire classes</p>
           
           {loading ? (
             <div className="text-sm text-gray-500">Loading classes...</div>
@@ -332,7 +333,7 @@ export default function AnalyticsDashboard() {
                         : 'border-gray-200 hover:border-gray-300'
                     }`}
                   >
-                    📚 Class
+                    <i className="fi fi-ss-books"></i> Class
                   </button>
                 </div>
               </div>
@@ -413,11 +414,15 @@ export default function AnalyticsDashboard() {
               >
                 {generatingReport ? (
                   <>
-                    <span className="inline-block animate-spin mr-2">⏳</span>
+                    <span className="inline-block animate-spin mr-2">
+                      <i className="fi fi-ss-hourglass"></i>
+                    </span>
                     Generating...
                   </>
                 ) : (
-                  <>📊 Generate & Download</>
+                  <>
+                    <i className="fi fi-ss-chart-histogram"></i> Generate & Download
+                  </>
                 )}
               </button>
               <button
@@ -438,7 +443,9 @@ export default function AnalyticsDashboard() {
           <h3 className="font-semibold text-gray-900 mb-3">Recent Reports</h3>
           {reports.length === 0 ? (
             <div className="text-center py-8 text-gray-500">
-              <div className="text-4xl mb-2">📋</div>
+              <div className="text-4xl mb-2 text-purple-600">
+                <i className="fi fi-ss-document"></i>
+              </div>
               <p>No reports generated yet</p>
             </div>
           ) : (
@@ -450,7 +457,9 @@ export default function AnalyticsDashboard() {
                 >
                   <div className="flex-1">
                     <div className="flex items-center gap-2">
-                      <span className="text-xl">{report.report_type === 'STUDENT' ? '👤' : '📚'}</span>
+                      <span className="text-xl">
+                        <i className={report.report_type === 'STUDENT' ? 'fi fi-ss-user' : 'fi fi-ss-books'}></i>
+                      </span>
                       <div>
                         <div className="font-medium text-gray-900">
                           {report.student_name || report.class_name || 'N/A'}

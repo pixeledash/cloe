@@ -230,7 +230,7 @@ export default function MarkAttendance() {
       
       {success && (
         <div className="mb-4 p-4 bg-green-50 border border-green-200 text-green-700 rounded-lg flex items-center gap-2">
-          <span className="text-green-600">✓</span>
+          <i className="fi fi-ss-check-circle text-green-600"></i>
           <span>{success}</span>
         </div>
       )}
@@ -245,7 +245,9 @@ export default function MarkAttendance() {
           <div className="text-center py-4 text-gray-500">Loading sessions...</div>
         ) : activeSessions.length === 0 ? (
           <div className="text-center py-8">
-            <div className="text-5xl mb-3">📝</div>
+            <div className="text-5xl mb-3 text-purple-600">
+              <i className="fi fi-sr-time-forward"></i>
+            </div>
             <p className="text-gray-600 mb-4">No active sessions found</p>
             <button
               onClick={() => navigate('/start-session')}
@@ -428,9 +430,9 @@ export default function MarkAttendance() {
 // Student Attendance Row Component
 function StudentAttendanceRow({ student, currentStatus, onStatusChange, isSaving }) {
   const statuses = [
-    { value: 'PRESENT', label: 'Present', icon: '✓', color: 'green' },
-    { value: 'ABSENT', label: 'Absent', icon: '✗', color: 'red' },
-    { value: 'LATE', label: 'Late', icon: '⌚', color: 'yellow' },
+    { value: 'PRESENT', label: 'Present', icon: 'fi fi-ss-check', color: 'green' },
+    { value: 'ABSENT', label: 'Absent', icon: 'fi fi-ss-cross', color: 'red' },
+    { value: 'LATE', label: 'Late', icon: 'fi fi-ss-clock', color: 'yellow' },
   ];
 
   return (
@@ -470,7 +472,7 @@ function StudentAttendanceRow({ student, currentStatus, onStatusChange, isSaving
               `}
               title={status.label}
             >
-              <span className="text-lg mr-1">{status.icon}</span>
+              <i className={`${status.icon} text-lg mr-1`}></i>
               {status.label}
             </button>
           );

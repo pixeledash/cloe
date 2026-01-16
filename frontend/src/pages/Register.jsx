@@ -69,9 +69,13 @@ const Register = () => {
       <div className="bg-white rounded-xl shadow-2xl p-8 md:p-10 w-full max-w-md">
         {/* Header */}
         <div className="text-center mb-8">
-          <h1 className="text-purple-600 text-3xl md:text-4xl font-bold mb-2">
-            Cloe Classroom
-          </h1>
+          <div className="flex justify-center mb-4">
+            <img 
+              src="/logo-with-text.png" 
+              alt="Cloe" 
+              className="h-16 object-contain"
+            />
+          </div>
           <h2 className="text-gray-900 text-2xl font-semibold mb-2">
             Create Account
           </h2>

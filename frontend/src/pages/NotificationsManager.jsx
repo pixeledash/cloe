@@ -165,7 +165,11 @@ const NotificationsManager = () => {
           </svg>
           Back to Dashboard
         </button>
-        <h1 className="text-3xl font-bold text-gray-900">📧 Notifications & Email Management</h1>
+        <h1 className="text-3xl font-bold text-gray-900">
+          <span className="text-3xl font-bold text-purple-600">
+          <i className="fi fi-ss-envelope"></i>
+          </span> Notifications & Email Management
+        </h1>
         <p className="text-gray-600 mt-2">Send automated reports and alerts to students</p>
       </div>
 
@@ -186,7 +190,9 @@ const NotificationsManager = () => {
           {/* Weekly Reports Section */}
           <div className="bg-white rounded-lg shadow-md p-6">
             <div className="flex items-center space-x-3 mb-4">
-              <span className="text-3xl">📬</span>
+              <span className="text-3xl text-purple-600">
+                <i className="fi fi-ss-envelope-open-text"></i>
+              </span>
               <div>
                 <h2 className="text-xl font-semibold text-gray-900">Send Weekly Reports</h2>
                 <p className="text-sm text-gray-600">Send attendance reports for the past 7 days</p>
@@ -258,7 +264,7 @@ const NotificationsManager = () => {
                 <button
                   onClick={handleSendWeeklyReports}
                   disabled={sendingReports}
-                  className="px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed"
+                  className="px-6 py-2 bg-purple-600 text-white rounded-md hover:bg-purple-700 disabled:bg-gray-400 disabled:cursor-not-allowed"
                 >
                   {sendingReports ? 'Sending...' : 'Send Reports'}
                 </button>
@@ -269,7 +275,9 @@ const NotificationsManager = () => {
           {/* Low Attendance Alerts Section */}
           <div className="bg-white rounded-lg shadow-md p-6">
             <div className="flex items-center space-x-3 mb-4">
-              <span className="text-3xl">⚠️</span>
+              <span className="text-3xl text-purple-600">
+                <i className="fi fi-ss-triangle-warning"></i>
+              </span>
               <div>
                 <h2 className="text-xl font-semibold text-gray-900">Send Low Attendance Alerts</h2>
                 <p className="text-sm text-gray-600">Alert students with attendance below threshold</p>
@@ -295,7 +303,7 @@ const NotificationsManager = () => {
                 <button
                   onClick={handleSendLowAttendanceAlerts}
                   disabled={sendingAlerts}
-                  className="px-6 py-2 bg-orange-600 text-white rounded-md hover:bg-orange-700 disabled:bg-gray-400 disabled:cursor-not-allowed"
+                  className="px-6 py-2 bg-purple-600 text-white rounded-md hover:bg-purple-700 disabled:bg-gray-400 disabled:cursor-not-allowed"
                 >
                   {sendingAlerts ? 'Sending...' : 'Send Alerts'}
                 </button>
@@ -309,7 +317,9 @@ const NotificationsManager = () => {
       <div className="bg-white rounded-lg shadow-md p-6">
         <div className="flex items-center justify-between mb-6">
           <div className="flex items-center space-x-3">
-            <span className="text-3xl">📋</span>
+            <span className="text-3xl text-purple-600">
+              <i className="fi fi-ss-list-check"></i>
+            </span>
             <div>
               <h2 className="text-xl font-semibold text-gray-900">Notification History</h2>
               <p className="text-sm text-gray-600">View all sent and pending notifications</p>
@@ -317,9 +327,9 @@ const NotificationsManager = () => {
           </div>
           <button
             onClick={refreshNotifications}
-            className="px-4 py-2 text-blue-600 hover:bg-blue-50 rounded-md"
+            className="px-4 py-2 text-blue-600 hover:bg-blue-50 rounded-md flex items-center gap-2"
           >
-            🔄 Refresh
+            <i className="fi fi-ss-refresh"></i> Refresh
           </button>
         </div>
 
@@ -331,9 +341,9 @@ const NotificationsManager = () => {
             className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
           >
             <option value="">All Types</option>
-            <option value="weekly_report">Weekly Report</option>
-            <option value="low_attendance_alert">Low Attendance Alert</option>
-            <option value="system_notification">System Notification</option>
+            <option value="WEEKLY_REPORT">Weekly Report</option>
+            <option value="LOW_ATTENDANCE_ALERT">Low Attendance Alert</option>
+            <option value="SYSTEM_NOTIFICATION">System Notification</option>
           </select>
 
           <select
@@ -342,10 +352,10 @@ const NotificationsManager = () => {
             className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
           >
             <option value="">All Status</option>
-            <option value="sent">Sent</option>
-            <option value="pending">Pending</option>
-            <option value="failed">Failed</option>
-            <option value="retrying">Retrying</option>
+            <option value="SENT">Sent</option>
+            <option value="PENDING">Pending</option>
+            <option value="FAILED">Failed</option>
+            <option value="RETRYING">Retrying</option>
           </select>
 
           <input
@@ -365,7 +375,9 @@ const NotificationsManager = () => {
           </div>
         ) : notifications.length === 0 ? (
           <div className="text-center py-12">
-            <span className="text-6xl">📭</span>
+            <span className="text-6xl text-gray-400">
+              <i className="fi fi-ss-inbox"></i>
+            </span>
             <p className="text-gray-600 mt-4">No notifications found</p>
           </div>
         ) : (

@@ -122,7 +122,9 @@ export default function StudentAnalytics() {
     return (
       <div className="p-6 max-w-7xl mx-auto">
         <div className="card text-center py-12">
-          <div className="text-6xl mb-4">📊</div>
+          <div className="text-6xl mb-4 text-purple-600">
+            <i className="fi fi-ss-chart-histogram"></i>
+          </div>
           <h3 className="text-xl font-semibold text-gray-900 mb-2">No Analytics Data</h3>
           <p className="text-gray-600 mb-4">No data available for this student.</p>
           <button onClick={() => navigate('/dashboard')} className="btn-primary">
@@ -175,7 +177,7 @@ export default function StudentAnalytics() {
         <StatCard
           title="Total Sessions"
           value={analytics.total_sessions}
-          icon="📚"
+          icon="fi fi-ss-books"
           color="blue"
         />
         <div className="card bg-gradient-to-br from-blue-50 to-blue-100 border-blue-200 flex items-center justify-center">
@@ -184,14 +186,14 @@ export default function StudentAnalytics() {
         <StatCard
           title="Punctuality Rate"
           value={`${analytics.punctuality_rate}%`}
-          icon="⏰"
+          icon="fi fi-ss-clock"
           color="purple"
           subtitle="On-time arrivals"
         />
         <StatCard
           title="Consecutive Absences"
           value={analytics.consecutive_absences}
-          icon="⚠️"
+          icon="fi fi-ss-exclamation"
           color={analytics.consecutive_absences >= 3 ? 'red' : analytics.consecutive_absences >= 2 ? 'yellow' : 'green'}
           subtitle="Current streak"
         />
@@ -202,14 +204,14 @@ export default function StudentAnalytics() {
         <StatCard
           title="Present"
           value={analytics.present_count}
-          icon="✓"
+          icon="fi fi-ss-check"
           color="green"
           subtitle={`${analytics.attendance_rate.toFixed(1)}% of sessions`}
         />
         <StatCard
           title="Absent"
           value={analytics.absent_count}
-          icon="✗"
+          icon="fi fi-ss-cross"
           color="red"
           subtitle={`${analytics.absence_rate.toFixed(1)}% of sessions`}
         />
@@ -230,9 +232,6 @@ export default function StudentAnalytics() {
             : 'bg-yellow-50 border-yellow-300'
         }`}>
           <div className="flex items-start gap-4">
-            <div className="text-4xl">
-              {analytics.risk_level === 'high' ? '🚨' : '⚠️'}
-            </div>
             <div className="flex-1">
               <h3 className={`text-xl font-bold mb-2 ${
                 analytics.risk_level === 'high' ? 'text-red-900' : 'text-yellow-900'
@@ -242,7 +241,6 @@ export default function StudentAnalytics() {
               <div className={`mb-3 ${
                 analytics.risk_level === 'high' ? 'text-red-700' : 'text-yellow-700'
               }`}>
-                <p className="font-medium mb-2">Contributing Factors:</p>
                 <ul className="list-disc list-inside space-y-1 text-sm">
                   {analytics.attendance_rate < 70 && (
                     <li>Attendance rate below 70% ({analytics.attendance_rate.toFixed(1)}%)</li>
@@ -262,13 +260,6 @@ export default function StudentAnalytics() {
                 </ul>
               </div>
               <div className={analytics.risk_level === 'high' ? 'text-red-800' : 'text-yellow-800'}>
-                <p className="font-medium mb-1">Recommendations:</p>
-                <ul className="list-disc list-inside space-y-1 text-sm">
-                  <li>Schedule one-on-one meeting with student</li>
-                  <li>Contact parent/guardian if applicable</li>
-                  <li>Identify and address potential barriers to attendance</li>
-                  <li>Develop attendance improvement plan</li>
-                </ul>
               </div>
             </div>
           </div>

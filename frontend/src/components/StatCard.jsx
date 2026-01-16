@@ -29,7 +29,9 @@ export default function StatCard({ title, value, icon, color = 'blue', subtitle,
           )}
         </div>
         {icon && (
-          <div className="text-4xl opacity-80">{icon}</div>
+          <div className="text-4xl opacity-80">
+            <i className={icon}></i>
+          </div>
         )}
       </div>
       {trend && (

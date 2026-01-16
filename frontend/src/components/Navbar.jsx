@@ -16,10 +16,18 @@ const Navbar = () => {
         {/* Brand */}
         <Link 
           to="/dashboard" 
-          className="flex items-center gap-3 text-gray-900 hover:text-purple-600 transition-colors"
+          className="flex items-center gap-2 text-gray-900 hover:opacity-80 transition-opacity"
         >
-          <span className="text-3xl">🎓</span>
-          <span className="text-xl font-bold hidden sm:inline">Cloe Classroom</span>
+          <img 
+            src="/logo.png" 
+            alt="Cloe Logo" 
+            className="h-10 object-contain"
+          />
+          <img 
+            src="/text.png" 
+            alt="Cloe" 
+            className="h-8 object-contain"
+          />
         </Link>
 
         {/* User Menu */}

@@ -146,16 +146,16 @@ export default function SessionAttendance() {
 
   const getStatusBadge = (status) => {
     const config = {
-      PRESENT: { bg: 'bg-green-100', text: 'text-green-800', icon: '✓' },
-      ABSENT: { bg: 'bg-red-100', text: 'text-red-800', icon: '✗' },
-      LATE: { bg: 'bg-yellow-100', text: 'text-yellow-800', icon: '⌚' },
+      PRESENT: { bg: 'bg-green-100', text: 'text-green-800', icon: 'fi fi-ss-check' },
+      ABSENT: { bg: 'bg-red-100', text: 'text-red-800', icon: 'fi fi-ss-cross' },
+      LATE: { bg: 'bg-yellow-100', text: 'text-yellow-800', icon: 'fi fi-ss-clock' },
     };
     
-    const c = config[status] || { bg: 'bg-gray-100', text: 'text-gray-800', icon: '?' };
+    const c = config[status] || { bg: 'bg-gray-100', text: 'text-gray-800', icon: 'fi fi-ss-interrogation' };
     
     return (
       <span className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${c.bg} ${c.text}`}>
-        <span className="mr-1">{c.icon}</span>
+        <i className={`${c.icon} mr-1`}></i>
         {status || 'Not Marked'}
       </span>
     );
@@ -211,7 +211,9 @@ export default function SessionAttendance() {
           <div className="text-center py-4 text-gray-500">Loading sessions...</div>
         ) : sessions.length === 0 ? (
           <div className="text-center py-8">
-            <div className="text-5xl mb-3">📚</div>
+            <div className="text-5xl mb-3 text-purple-600">
+              <i className="fi fi-ss-books"></i>
+            </div>
             <p className="text-gray-600">No sessions found</p>
           </div>
         ) : (

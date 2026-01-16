@@ -5,13 +5,26 @@ const NotificationCard = ({ notification, isExpanded, onToggle }) => {
   const getNotificationIcon = (type) => {
     switch (type?.toLowerCase()) {
       case 'weekly_report':
-        return '📧';
+        return 'fi fi-ss-envelope-open-text';
       case 'low_attendance_alert':
-        return '⚠️';
+        return 'fi fi-ss-triangle-warning';
       case 'system_notification':
-        return '🔔';
+        return 'fi fi-ss-bell';
       default:
-        return '📨';
+        return 'fi fi-ss-envelope';
+    }
+  };
+
+  const getIconColor = (type) => {
+    switch (type?.toLowerCase()) {
+      case 'weekly_report':
+        return 'text-blue-600';
+      case 'low_attendance_alert':
+        return 'text-orange-600';
+      case 'system_notification':
+        return 'text-purple-600';
+      default:
+        return 'text-gray-600';
     }
   };
 
@@ -37,7 +50,9 @@ const NotificationCard = ({ notification, isExpanded, onToggle }) => {
       >
         <div className="flex items-start justify-between">
           <div className="flex items-start space-x-3 flex-1">
-            <span className="text-2xl">{getNotificationIcon(notification.notification_type)}</span>
+            <span className={`text-2xl ${getIconColor(notification.notification_type)}`}>
+              <i className={getNotificationIcon(notification.notification_type)}></i>
+            </span>
             <div className="flex-1 min-w-0">
               <div className="flex items-center space-x-2 mb-1">
                 <h4 className="text-sm font-semibold text-gray-900 truncate">

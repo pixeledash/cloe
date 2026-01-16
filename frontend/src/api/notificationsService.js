@@ -34,13 +34,16 @@ const notificationsService = {
    */
   async listNotifications(filters = {}) {
     const params = new URLSearchParams();
-    if (filters.notification_type) params.append('notification_type', filters.notification_type);
+    if (filters.notification_type) params.append('type', filters.notification_type);
     if (filters.status) params.append('status', filters.status);
     if (filters.recipient_email) params.append('recipient_email', filters.recipient_email);
     
     const queryString = params.toString();
     const response = await api.get(`/notifications/${queryString ? '?' + queryString : ''}`);
-    return response.data;
+    
+    // Backend returns { count: X, notifications: [...] }
+    // Return just the notifications array
+    return response.data.notifications || [];
   },
 
   /**

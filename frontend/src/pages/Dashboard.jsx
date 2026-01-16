@@ -9,70 +9,70 @@ const Dashboard = () => {
       title: 'Subjects',
       description: 'Manage academic subjects',
       link: '/academics/subjects',
-      icon: '📖',
+      icon: 'fi fi-ss-book-bookmark',
       roles: ['ADMIN', 'TEACHER'],
     },
     {
       title: 'Classes',
       description: 'Manage classroom classes',
       link: '/academics/classes',
-      icon: '📚',
+      icon: 'fi fi-ss-books',
       roles: ['ADMIN', 'TEACHER'],
     },
     {
       title: 'Students',
       description: 'Manage student information and enrollments',
       link: '/academics/students',
-      icon: '👨‍🎓',
+      icon: 'fi fi-ss-users-alt',
       roles: ['ADMIN', 'TEACHER'],
     },
     {
       title: 'Start Session',
       description: 'Start a new class session',
       link: '/start-session',
-      icon: '🚀',
+      icon: 'fi fi-ss-play-circle',
       roles: ['TEACHER'],
     },
     {
       title: 'Active Sessions',
       description: 'View and manage active sessions',
       link: '/active-sessions',
-      icon: '📡',
+      icon: 'fi fi-ss-signal-stream',
       roles: ['ADMIN', 'TEACHER'],
     },
     {
       title: 'Mark Attendance',
       description: 'Record student attendance for active sessions',
       link: '/mark-attendance',
-      icon: '✓',
+      icon: 'fi fi-ss-checkbox',
       roles: ['TEACHER'],
     },
     {
       title: 'Session Attendance',
       description: 'View attendance records and statistics',
       link: '/session-attendance',
-      icon: '📊',
+      icon: 'fi fi-ss-chart-histogram',
       roles: ['ADMIN', 'TEACHER'],
     },
     {
       title: 'Analytics & Reports',
       description: 'View insights, generate reports, and track performance',
       link: '/analytics',
-      icon: '📈',
+      icon: 'fi fi-ss-chart-line-up',
       roles: ['ADMIN', 'TEACHER', 'STUDENT'],
     },
     {
       title: 'Notifications',
       description: 'Send weekly reports and attendance alerts via email',
       link: '/notifications',
-      icon: '📧',
+      icon: 'fi fi-ss-envelope',
       roles: ['ADMIN', 'TEACHER'],
     },
     {
       title: 'Admin Panel',
       description: 'Manage users and roles',
       link: '/admin/users',
-      icon: '⚙️',
+      icon: 'fi fi-ss-settings',
       roles: ['ADMIN'],
     },
   ];
@@ -120,7 +120,9 @@ const Dashboard = () => {
                 key={index} 
                 className="card card-hover border-2 border-transparent group"
               >
-                <div className="text-5xl mb-4">{card.icon}</div>
+                <div className="text-5xl mb-4 text-purple-600 group-hover:scale-110 transition-transform">
+                  <i className={card.icon}></i>
+                </div>
                 <h3 className="text-xl font-bold text-gray-900 mb-2 group-hover:text-purple-600 transition-colors">
                   {card.title}
                 </h3>

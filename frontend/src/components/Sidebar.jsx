@@ -9,67 +9,67 @@ const Sidebar = () => {
     {
       name: 'Dashboard',
       path: '/dashboard',
-      icon: '🏠',
+      icon: 'fi fi-ss-home',
+      roles: ['ADMIN', 'TEACHER', 'STUDENT'],
+    },
+    {
+      name: 'Subjects',
+      path: '/academics/subjects',
+      icon: 'fi fi-ss-book-bookmark',
       roles: ['ADMIN', 'TEACHER'],
     },
     {
       name: 'Classes',
       path: '/academics/classes',
-      icon: '📚',
+      icon: 'fi fi-ss-books',
       roles: ['ADMIN', 'TEACHER'],
     },
     {
       name: 'Students',
       path: '/academics/students',
-      icon: '👥',
-      roles: ['ADMIN', 'TEACHER'],
-    },
-    {
-      name: 'Subjects',
-      path: '/academics/subjects',
-      icon: '📖',
+      icon: 'fi fi-ss-users-alt',
       roles: ['ADMIN', 'TEACHER'],
     },
     {
       name: 'Start Session',
-      path: '/sessions/start',
-      icon: '▶️',
+      path: '/start-session',
+      icon: 'fi fi-ss-play-circle',
       roles: ['TEACHER'],
     },
     {
       name: 'Active Sessions',
-      path: '/sessions/active',
-      icon: '🔴',
-      roles: ['TEACHER'],
+      path: '/active-sessions',
+      icon: 'fi fi-ss-signal-stream',
+      roles: ['ADMIN', 'TEACHER'],
     },
     {
       name: 'Mark Attendance',
-      path: '/attendance/mark',
-      icon: '✓',
+      path: '/mark-attendance',
+      icon: 'fi fi-ss-checkbox',
       roles: ['TEACHER'],
     },
     {
-      name: 'Analytics',
-      path: '/analytics/student',
-      icon: '📊',
+      name: 'Session Attendance',
+      path: '/session-attendance',
+      icon: 'fi fi-ss-chart-histogram',
       roles: ['ADMIN', 'TEACHER'],
     },
     {
-      name: 'Reports',
-      path: '/reports/generate',
-      icon: '📄',
-      roles: ['ADMIN', 'TEACHER'],
+      name: 'Analytics & Reports',
+      path: '/analytics',
+      icon: 'fi fi-ss-chart-line-up',
+      roles: ['ADMIN', 'TEACHER', 'STUDENT'],
     },
     {
       name: 'Notifications',
-      path: '/notifications/weekly',
-      icon: '📧',
+      path: '/notifications',
+      icon: 'fi fi-ss-envelope',
       roles: ['ADMIN', 'TEACHER'],
     },
     {
       name: 'Admin Panel',
       path: '/admin/users',
-      icon: '⚙️',
+      icon: 'fi fi-ss-settings',
       roles: ['ADMIN'],
     },
   ];
@@ -97,7 +97,9 @@ const Sidebar = () => {
                }`
             }
           >
-            <span className="text-xl w-7 text-center">{item.icon}</span>
+            <span className="text-lg w-7 text-center">
+              <i className={item.icon}></i>
+            </span>
             <span className="text-sm">{item.name}</span>
           </NavLink>
         ))}

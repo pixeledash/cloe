@@ -208,19 +208,19 @@ export default function ClassAnalytics() {
         <StatCard
           title="Total Students"
           value={analytics.total_students}
-          icon="👥"
+          icon="fi fi-ss-users-alt"
           color="blue"
         />
         <StatCard
           title="Sessions Conducted"
           value={analytics.total_sessions}
-          icon="📅"
+          icon="fi fi-ss-calendar"
           color="purple"
         />
         <StatCard
           title="Average Attendance"
           value={`${analytics.overall_attendance_rate.toFixed(1)}%`}
-          icon="📊"
+          icon="fi fi-ss-chart-histogram"
           color={analytics.overall_attendance_rate >= 85 ? 'green' : analytics.overall_attendance_rate >= 70 ? 'yellow' : 'red'}
         />
       </div>
@@ -421,7 +421,9 @@ export default function ClassAnalytics() {
                   </div>
                 ) : (
                   <div className="text-center py-8 text-gray-500">
-                    <div className="text-4xl mb-2">✓</div>
+                    <div className="text-4xl mb-2">
+                      <i className="fi fi-ss-check text-green-600"></i>
+                    </div>
                     <p>No chronic absentees - Great job!</p>
                   </div>
                 )}
@@ -451,7 +453,9 @@ export default function ClassAnalytics() {
                   </div>
                 ) : (
                   <div className="text-center py-8 text-gray-500">
-                    <div className="text-4xl mb-2">✓</div>
+                    <div className="text-4xl mb-2">
+                      <i className="fi fi-ss-check text-green-600"></i>
+                    </div>
                     <p>No at-risk students identified</p>
                   </div>
                 )}
@@ -474,7 +478,7 @@ export default function ClassAnalytics() {
                           <p className="text-sm text-gray-600">{student.total_sessions} sessions attended</p>
                         </div>
                         <span className="px-4 py-2 bg-green-100 text-green-800 rounded-full font-bold flex items-center gap-2">
-                          <span>🏆</span>
+                          <i className="fi fi-ss-trophy"></i>
                           {student.attendance_rate.toFixed(1)}%
                         </span>
                       </div>
@@ -482,7 +486,9 @@ export default function ClassAnalytics() {
                   </div>
                 ) : (
                   <div className="text-center py-8 text-gray-500">
-                    <div className="text-4xl mb-2">📊</div>
+                    <div className="text-4xl mb-2 text-purple-600">
+                      <i className="fi fi-ss-chart-histogram"></i>
+                    </div>
                     <p>No students with perfect attendance yet</p>
                   </div>
                 )}
